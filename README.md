@@ -15,7 +15,7 @@ You can install spasm from github with:
 
 ```R
 # install.packages("devtools")
-devtools::install_github("spasm/dajmcdon")
+devtools::install_github("dajmcdon/spasm")
 ```
 
 ## Example
