@@ -1,0 +1,19 @@
+Package: spasm
+Type: Package
+Title: Implements the Laplace-Gaussian filter for sparse, additive, state-space
+    models
+Version: 0.1
+Date: 2016-07-04
+Authors@R: person("Daniel J.", "McDonald", email = "dajmcdon@indiana.edu",
+  role = c("aut", "cre"))
+Description: Estimates semi-parametric high-dimensional state-space models.
+    Here we presume that both the observation and state distributions have Gaussian
+    noise, but we let the observation equation evolve as an additive model in the
+    state. In particular, we expand the state in the spline basis and estimate
+    the coefficients via the group lasso. As this model is non-linear, we use the
+    Laplace-Gaussian filter to estimate the hidden states quickly and accurately.
+License: GPL
+LazyData: TRUE
+Imports: SAM
+Depends: splines
+RoxygenNote: 5.0.1
