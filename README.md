@@ -1,5 +1,7 @@
 # spasm
 
+Testing...
+
 The goal of `spasm` is to implement the first order Laplace Gaussian filter (as described in [Koyama et al](http://dx.doi.org/10.1198/jasa.2009.tm08326)) for estimating state space models whose observation equation has a mean function which is a spline in the unobserved state:
 \[
 \begin{align*}
