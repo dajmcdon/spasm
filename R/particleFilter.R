@@ -1,10 +1,10 @@
 #'@export
-particleFilter <- function(Yin, stateTransition, 
+particleFilter <- function(Yin, stateTransition,
                f = dnorm,            #density of Yt given Xt
                nParticles = 1000, generateParticles = rnorm, verbose = FALSE){
     Y = as.matrix(Yin)
     particles = as.matrix(generateParticles(nParticles))
-    output = array(dim = c(nParticles, ncol(particles), nrow(Y)))
+    output = array(dim = c(nrow(Y), nParticles, ncol(particles)))
     for(t in 1:nrow(Y)){
         if(verbose){
             print(t)
