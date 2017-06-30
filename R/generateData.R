@@ -33,5 +33,5 @@ generateSPASM <- function(N, p, d, sig.x=.1, sig.y = .1){
    x[,i] = Tt %*% x[,i-1] + sig.x * rnorm(p)
  }
  y = Zt %*% sin((1:p)/(2*pi) * x) + sig.y * matrix(rnorm(d*N), d, N)
- return(list(y=t(y), x=t(x), Tt=Tt, HHt = diag(sig.y, d), GGt = diag(sig.x, p)))
+ return(list(y=t(y), x=t(x), Tt=Tt, HHt = diag(sig.y, d), GGt = diag(sig.x, p), Zt = Zt))
 }

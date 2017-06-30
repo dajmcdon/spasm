@@ -18,4 +18,4 @@ BugReports: http://github.iu.edu/dajmcdon/spasm
 LazyData: TRUE
 Imports: SAM
 Depends: splines
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1

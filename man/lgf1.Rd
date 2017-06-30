@@ -35,4 +35,3 @@ filt = lgf1(someData$y, SPAMfit, someData$Tt,
 matplot(someData$x, ty='l', col=1, lty=1)
 matlines(filt$xtt, col=2, lty=3)
 }
-

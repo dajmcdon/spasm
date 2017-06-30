@@ -30,4 +30,3 @@ SPAMpreds = predict(SPAMfit, filt$xtt)
 matplot(someData$y, ty='l', col=1, lty=1)
 matlines(SPAMpreds, col=4, lty=3)
 }
-

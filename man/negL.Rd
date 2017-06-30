@@ -28,4 +28,3 @@ This function calculates
 \deqn{-l(x) = -log p(y_{t} | x_{t}) p(x_{t} | y_{1:t-1}).}
 As the second distribution in the above product is approximated with a Gaussian, the result is also an approximation. Furthermore, as the first order LGF (\code{\link{lgf1}}) requires minimization over \eqn{-l(x)}, this function calculates it only to a constant of porportionality (independent of x)).
 }
-

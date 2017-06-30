@@ -36,4 +36,3 @@ Estimates sparse (mulitivariate) additive model
 someData = generateSPASM(100,3,4)
 SPAMfit = spam(someData$y, someData$x)
 }
-

@@ -32,4 +32,3 @@ The result is therefore:
 \examples{
 posteriorPredictive(rnorm(3), diag(1,3), matrix(rnorm(9),3), diag(1,3))
 }
-

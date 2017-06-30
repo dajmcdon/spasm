@@ -7,4 +7,5 @@
 #' @docType package
 #' @name spasm
 #' @import splines
+#' @import mvtnorm
 NULL

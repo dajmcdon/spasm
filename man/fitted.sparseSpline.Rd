@@ -24,4 +24,3 @@ someData = generateSPASM(100,3,4)
 SPAMfit = spam(someData$y, someData$x, returnall=TRUE)
 SPAMpreds = fitted(SPAMfit)
 }
-

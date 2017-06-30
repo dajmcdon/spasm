@@ -36,4 +36,3 @@ where \eqn{Z} is a dxp matrix of standard uniform random variables and \eqn{z=[1
 \examples{
 generateSPASM(100,3,4)
 }
-
