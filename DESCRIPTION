@@ -17,5 +17,5 @@ URL: http://github.iu.edu/dajmcdon/spasm
 BugReports: http://github.iu.edu/dajmcdon/spasm
 LazyData: TRUE
 Imports: SAM
-Depends: splines
+Depends: splines, mvtnorm
 RoxygenNote: 6.0.1

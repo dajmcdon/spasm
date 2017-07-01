@@ -4,7 +4,7 @@ particleFilter <- function(Yin, stateTransition,
                nParticles = 1000, generateParticles = rnorm, verbose = FALSE){
     Y = as.matrix(Yin)
     particles = as.matrix(generateParticles(nParticles))
-    output = array(dim = c(nParticles, ncol(particles), nrow(Y)))
+    output = array(dim = c(nrow(Y), ncol(particles), nParticles))
     for(t in 1:nrow(Y)){
         if(verbose){
             print(t)
@@ -13,7 +13,7 @@ particleFilter <- function(Yin, stateTransition,
         weights = weights/sum(weights)
         indices = sample(1:nrow(particles), prob = weights, replace = TRUE)
         output[t,,] = particles[indices,]
-        particles = stateTransition(particles[indices,])
+        particles = as.matrix(stateTransition(as.matrix(particles[indices,])))
     }
     output
 }
