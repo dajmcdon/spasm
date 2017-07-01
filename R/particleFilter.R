@@ -11,7 +11,7 @@ particleFilter <- function(Yin, stateTransition,
         }
         weights = f(Y[t,], particles)
         weights = weights/sum(weights)
-        if(sum(weights^2) > t/2){
+        if(sum(weights^2) > 0.15){
             indices = sample(1:nrow(particles), prob = weights, replace = TRUE)
         }
         else{
