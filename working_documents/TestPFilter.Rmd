@@ -1,0 +1,88 @@
+---
+title: "Testing the PF"
+author: "DJM"
+date: "June 30, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Some installs
+
+```{r}
+library(myFKF) 
+library(spasm)
+# you should be able to install with 
+# `devtools::install_github(dajmcdon/myFKF)`
+```
+
+## Generate a linear SS model and plot it
+
+```{r}
+set.seed(12345)
+linmod = simSS(1000,Tt=matrix(.9))
+```
+
+In the figure below, the red line is the hidden state while the black line are the observations. This is a linear SS model, so the Kalman filter gives the optimal one-step-ahead state estimates (in MSE), and I already know that the code works.
+
+```{r}
+par(mar=c(4,3,1,1))
+plot(linmod$a, ty='l', col=2, bty='n', las=1,xlab='time')
+points(c(linmod$y),cex=.2,pch=19)
+```
+
+## Estimate it with the Kalman filter
+
+```{r}
+kfilt = fkf(a0=0, P0=matrix(10), dt=matrix(0), ct=matrix(0), 
+            Tt=matrix(.9), Zt=matrix(1), HHt=matrix(1),
+            GGt=matrix(1), yt=linmod$y)
+par(mar=c(4,3,1,1))
+plot(linmod$a, ty='l', col=2, bty='n', las=1,xlab='time')
+points(c(linmod$y),cex=.2,pch=19)
+lines(c(kfilt$att),col=4)
+```
+
+The Kalman filter estimate of the hidden state is shown in blue, and closely tracks the true state in red (the smoother estimate would be better, but it's not shown here).
+
+## Estimate it with the particle filter (MMcB)
+
+```{r}
+# another seed
+set.seed(23456)
+# set up the model
+f = function(y,x) dnorm(y,x)
+## note that if x[t] is dim-1, there are some issues, can fix as below
+g = function(xold) matrix(rnorm(length(xold), .9*xold), ncol=1)
+pfilt = particleFilter(
+  matrix(linmod$y,ncol=1), g, f, 1000, 
+  function(x) matrix(rnorm(x,0,10),ncol=1) # same as initial dist above
+)
+dist_pfilt = drop(pfilt)
+mean_pfilt = rowMeans(dist_pfilt)
+par(mar=c(4,3,1,1))
+plot(linmod$a, ty='l', col=2, bty='n', las=1,xlab='time')
+points(c(linmod$y),cex=.2,pch=19)
+lines(mean_pfilt,col=3)
+```
+
+Here the green is the pf estimate of $E[X_t | Y_t]$. This is very close to the truth. We can check a few more things:
+
+```{r}
+mean((mean_pfilt - linmod$a)^2)
+mean((kfilt$att - linmod$a)^2)
+```
+
+Not much difference here. I re-ran with more particles and found a small error on line 7 of your code (fixed now).
+
+```{r, eval=FALSE, include=FALSE}
+pfilt2 = particleFilter(
+  matrix(linmod$y,ncol=1), g, f, 10000, 
+  function(x) matrix(rnorm(x,0,10),ncol=1) # same as initial dist above
+)
+dist_pfilt2 = drop(pfilt2)
+mean_pfilt2 = rowMeans(dist_pfilt2)
+mean((mean_pfilt2 - linmod$a)^2)
+```
