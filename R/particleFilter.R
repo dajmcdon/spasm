@@ -5,46 +5,58 @@ particleFilter <- function(Yin, stateTransition,
     Y = as.matrix(Yin)
     particles = as.matrix(generateParticles(nParticles))
     output = array(dim = c(nrow(Y), ncol(particles), nParticles))
+    means = array(dim = c(nrow(Y), ncol(particles)))
     for(t in 1:nrow(Y)){
         if(verbose){
             print(t)
         }
         weights = f(Y[t,], particles)
-        weights = weights/sum(weights)
         indices = sample(1:nrow(particles), prob = weights, replace = TRUE)
         output[t,,] = particles[indices,]
+        means[t,] = colMeans(particles)
         particles = as.matrix(stateTransition(as.matrix(particles[indices,])))
     }
-    output
+    list(particles = output, means = means)
+}
+
+ilogit <- function(x){
+    1/(1 + exp(-1*x))
 }
 
 stateTransition <- function(x){
-    (0.9 * x) + (0.1 * rnorm(length(x)))
+    0.9*x + rnorm(length(x), mean = 0, sd = sqrt(0.1))
 }
 
-stateT <- function(X){
-    t(apply(X, 1, stateTransition))
+observationFunction <- function(x){
+    4*ilogit(x)*(1 - ilogit(x)) + rnorm(length(x), mean = 0, sd = sqrt(0.1))
 }
 
-generateParticles <- function(n){
-    matrix(rep(0, n*3), nrow = n, ncol = 3)
+generateDat <- function(TT){
+    x = double(TT)
+    y = double(TT)
+    x[1] = rnorm(1)
+    for(t in 2:TT){
+        x[t] = stateTransition(x[t - 1])
+    }
+    y = observationFunction(x)
+    list(x = x, y = y)
 }
 
 yGivenX <- function(y, x){
-    dmvnorm(y, mean = as.vector(dat$Zt %*% sin((1:length(x))/(2*pi) * x)), sigma = diag(0.1, length(y)))
-}
-
-ygx <- function(y, x){
-    apply(x, MARGIN = 1, function(z){yGivenX(y, z)})
+    dnorm(y, mean = 4*ilogit(x)*(1-ilogit(x)), sd = sqrt(0.1))
 }
 
 gp <- function(n){
-    matrix(0, nrow = n, ncol = 3)
+    matrix(rnorm(n), nrow = n, ncol = 1)
 }
-
 
 #' @export
 filterTest <- function(TT, np){
-    dat =  generateSPASM(TT, 3, 2)
-    particleFilter(dat$y, stateTransition = stateT, f = ygx, generateParticles = gp, verbose = TRUE, nParticles = np)
+    dat =  generateDat(200)
+    filtered = particleFilter(dat$y, stateTransition = stateTransition, f = yGivenX, generateParticles = gp, nParticles = 200000)
+    plot(dat$x ~ c(1:200))
+    lines(filtered$means)
+    remove(dat)
+    remove(filtered)
+    
 }
