@@ -13,7 +13,7 @@ particleFilter <- function(Yin, stateTransition,
         weights = f(Y[t,], particles)
         indices = sample(1:nrow(particles), prob = weights, replace = TRUE)
         output[t,,] = particles[indices,]
-        means[t,] = colMeans(particles)
+        means[t,] = colMeans(particles[indices,])
         particles = as.matrix(stateTransition(as.matrix(particles[indices,])))
     }
     list(particles = output, means = means)
