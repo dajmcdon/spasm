@@ -35,7 +35,7 @@ spam <- function(Y, X, df = 10, which.lam = 10, returnall=FALSE,...){
   d = ncol(Y)
   p = ncol(X)
   B.hat = matrix(0, nrow=d, ncol=df*p) # for intercept
-  spam.out = vector(mode='list',p)
+  spam.out = vector(mode='list',d)
   for(i in 1:d){
     ## samQL args: (X, y, p = 3, lambda = NULL,nlambda = NULL,
     ##              lambda.min.ratio=0.005,thol=1e-05,max.ite=1e+05)
