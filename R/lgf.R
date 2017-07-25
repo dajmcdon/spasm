@@ -69,11 +69,7 @@ negL <- function(x, prev.state, y, out.spam, HHinv){
     Phi.state[index.sel] = splines::ns(x[j], knots = interior[,j],
                                        Boundary.knots = boundary[,j])
   }
-  intercept = c(out.spam$spamout[[1]]$intercept[10],
-                out.spam$spamout[[2]]$intercept[10],
-                out.spam$spamout[[3]]$intercept[10],
-                out.spam$spamout[[4]]$intercept[10])
-  Z.state = B.hat %*% Phi.state + intercept
+  Z.state = B.hat %*% Phi.state + out.spam$intercept
   obs = crossprod(Z.state, HHinv)
   observational.part = -2*obs %*% y + obs %*% Z.state
   pri = crossprod(x, prev.state$Pinv)
@@ -108,12 +104,8 @@ gradNegL <- function(x, prev.state, y, out.spam, HHinv){
     Phi.prime.state[index.sel,k] = nsDeriv(x[k], derivs = 1, knots = interior[,k],
                                            Boundary.knots = boundary[,k])
   }
-  intercept = c(out.spam$spamout[[1]]$intercept[10],
-                out.spam$spamout[[2]]$intercept[10],
-                out.spam$spamout[[3]]$intercept[10],
-                out.spam$spamout[[4]]$intercept[10])
   Z.prime.state = B.hat %*% Phi.prime.state
-  Z.state = B.hat %*% Phi.state + intercept
+  Z.state = B.hat %*% Phi.state + out.spam$intercept
   observational.part = drop(crossprod(Z.prime.state, HHinv) %*% (y-Z.state))
   prior.part = drop(prev.state$Pinv %*% (prev.state$x - x))
   return(-2*(observational.part + prior.part)) ## we multiplied
@@ -164,11 +156,7 @@ negHessL <- function(x, prev.state, y, out.spam, HHinv){
   }
   Z.prime.prime.state = B.hat %*% Phi.prime.prime.state
   Z.prime.state = B.hat %*% Phi.prime.state
-  intercept = c(out.spam$spamout[[1]]$intercept[10],
-                out.spam$spamout[[2]]$intercept[10],
-                out.spam$spamout[[3]]$intercept[10],
-                out.spam$spamout[[4]]$intercept[10])
-  Z.state = B.hat %*% Phi.state + intercept
+  Z.state = B.hat %*% Phi.state + out.spam$intercept
   ZppH = crossprod(Z.prime.prime.state, HHinv)
   term1 = diag(ZppH %*% y)
   term2 = diag(ZppH %*% Z.state)

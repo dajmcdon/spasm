@@ -35,6 +35,7 @@ spam <- function(Y, X, df = 10, which.lam = 10, returnall=FALSE,...){
   d = ncol(Y)
   p = ncol(X)
   B.hat = matrix(0, nrow=d, ncol=df*p) # for intercept
+  intercept = rep(0, d)
   spam.out = vector(mode='list',d)
   for(i in 1:d){
     ## samQL args: (X, y, p = 3, lambda = NULL,nlambda = NULL,
@@ -42,6 +43,7 @@ spam <- function(Y, X, df = 10, which.lam = 10, returnall=FALSE,...){
     ## Notes: p in samQL refers to the number of basis functions (our 'df')
     spam.out[[i]] = SAM::samQL(X, Y[,i], p=df,...)
     B.hat[i,] = spam.out[[i]]$w[,which.lam]
+    intercept[i] = spam.out[[i]]$intercept[which.lam]
     ## chosen the same for each component, need to choose this
   }
   # need the knots, but same for all d
@@ -49,7 +51,7 @@ spam <- function(Y, X, df = 10, which.lam = 10, returnall=FALSE,...){
   boundary = spam.out[[1]]$Boundary.knots
   knots = list('interior'=interior,'boundary'=boundary)
   range.info = list('min'=spam.out[[1]]$X.min,'range'=spam.out[[1]]$X.ran)
-  out = list('knots'=knots,'B.hat'=B.hat,'range.info'=range.info)
+  out = list('knots'=knots,'B.hat'=B.hat,'range.info'=range.info, 'intercept' = intercept)
   if(returnall) {
     out$spamout = spam.out
     out$X = X
