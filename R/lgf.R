@@ -116,7 +116,7 @@ gradNegL <- function(x, prev.state, y, out.spam, HHinv){
   Z.state = B.hat %*% Phi.state + intercept
   observational.part = drop(crossprod(Z.prime.state, HHinv) %*% (y-Z.state))
   prior.part = drop(prev.state$Pinv %*% (prev.state$x - x))
-  return(-1*(observational.part + prior.part)) ## we multiplied
+  return(-2*(observational.part + prior.part)) ## we multiplied
     ## -2*l, so we do the same here.
 }
 
@@ -173,7 +173,7 @@ negHessL <- function(x, prev.state, y, out.spam, HHinv){
   term1 = diag(ZppH %*% y)
   term2 = diag(ZppH %*% Z.state)
   term3 = crossprod(Z.prime.state, HHinv) %*% Z.prime.state
-  return(-1*(term1 - (term2 + term3) - prev.state$Pinv) )
+  return(-2*(term1 - (term2 + term3) - prev.state$Pinv) )
 }
 
 #' First order LGF
